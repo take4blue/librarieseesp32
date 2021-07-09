@@ -1,0 +1,15 @@
+{
+    "name": "Readline",
+    "version": "1.0.0",
+    "platforms": ["espressif32"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "sample1",
+            "base": "examples/sample1",
+            "files": [
+                "main.cpp"
+            ]
+        }
+    ]
+}
