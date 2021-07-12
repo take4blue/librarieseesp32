@@ -1,6 +1,6 @@
 {
     "name": "Readline",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -11,5 +11,10 @@
                 "main.cpp"
             ]
         }
-    ]
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
 }
