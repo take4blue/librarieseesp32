@@ -1,0 +1,30 @@
+{
+    "name": "Magnetic",
+    "description" : "Magnetic sensor",
+    "version": "1.0.0",
+    "platforms": ["espressif32", "atmelavr", "raspberrypi"],
+    "frameworks": ["espidf", "arduino"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "for Arduino",
+            "base": "examples/sample1",
+            "files": [
+                "sample1.cpp"
+            ]
+        },
+        {
+            "name": "for ESP-IDF",
+            "base": "examples/sample2",
+            "files": [
+                "sample2.cpp"
+            ]
+        }
+
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
+}
