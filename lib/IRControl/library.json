@@ -1,0 +1,37 @@
+{
+    "name": "IR Remote Control",
+    "description" : "Library analyzed IR remote control.",
+    "version": "1.0.0",
+    "platforms": ["espressif32", "atmelavr", "raspberrypi"],
+    "frameworks": ["espidf", "arduino"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "Analyze IR for Arduino",
+            "base": "examples/AnalyzeIr1",
+            "files": [
+                "AnalyzeIr1.cpp"
+            ]
+        },
+        {
+            "name": "Analyze IR for ESP-IDF",
+            "base": "examples/AnalyzeIr2",
+            "files": [
+                "AnalyzeIr2.cpp"
+            ]
+        },
+        {
+            "name": "RecordIr",
+            "base": "examples/RecordIr",
+            "files": [
+                "RecordIr.cpp", "RecordIrTop.h"
+            ]
+        }
+
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
+}
