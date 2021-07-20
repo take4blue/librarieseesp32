@@ -5,6 +5,7 @@ namespace Take4
 {
     typedef uint8_t RGBBuffer_t;
 
+    // PL9823フルカラーLED制御用クラス
     class ColorLed
     {
     private:
@@ -15,11 +16,16 @@ namespace Take4
     size_t wanted_num, size_t* translated_size, size_t* item_num);
 
     public:
+        // RGBバッファの1データのサイズ
+        // RGBBuffer_tをBufferBlockSize * updateのnum分用意しておく
         static const size_t BufferBlockSize = 3;
 
         ColorLed();
         ~ColorLed();
 
+        // 初期処理
+        // pin : LEDを接続するピン番号
+        // channel : RMT制御用のチャンネル番号
         void begin(gpio_num_t pin, rmt_channel_t channel);
 
         // LEDの更新
