@@ -1,6 +1,7 @@
 #include "ColorLed.h"
 #include <driver/gpio.h>
 #include <esp32/rom/ets_sys.h>
+#include <algorithm>
 
 namespace Take4
 {
@@ -26,6 +27,10 @@ namespace Take4
     static const rmt_item32_t pl9823_2_bit0 = {{{4, 1, 10, 0}}};
     static const rmt_item32_t pl9823_2_bit1 = {{{9, 1, 5, 0}}};
 
+    // pl9823_1_bitで出力した時pl9823が出したタイミングで800kHzに近いタイミングに調整してみた。
+    static const rmt_item32_t pl9823_3_bit0 = {{{4, 1, 8, 0}}};
+    static const rmt_item32_t pl9823_3_bit1 = {{{8, 1, 4, 0}}};
+
     void IRAM_ATTR ColorLed::u8toRmt(const void *src, rmt_item32_t *dest, size_t src_size,
                                      size_t wanted_num, size_t *translated_size, size_t *item_num)
     {
@@ -39,14 +44,16 @@ namespace Take4
         size_t size = 0;
         size_t num = 0;
         uint8_t *psrc = (uint8_t *)src; // RGBバッファ情報に変換
+        // 転送データ数を決定する
+        size_t transferNum = std::min(wanted_num / 24, src_size / 3);       // RGBのビット数24ビットで割り、いくつのLED用にデータを送信するかを決める
 
-        for (rmt_item32_t *pdest = dest; size < src_size && num < wanted_num; ++size, ++psrc) {
-            for (int i = 7; i >= 0; --i, ++num, ++pdest) {
-                if ((*psrc >> i) & 0x1) {
-                    pdest->val = pl9823_2_bit1.val;
+        for (rmt_item32_t *pdest = dest; size < (transferNum * 3) && num < wanted_num; ++size) {
+            for (int i = 7; i >= 0; --i, ++num) {
+                if ((psrc[size] >> i) & 0x1) {
+                    pdest[num].val = pl9823_3_bit1.val;
                 }
                 else {
-                    pdest->val = pl9823_2_bit0.val;
+                    pdest[num].val = pl9823_3_bit0.val;
                 }
             }
         }
@@ -72,6 +79,7 @@ namespace Take4
         channel_ = channel;
         rmt_config_t config = RMT_DEFAULT_CONFIG_TX(pin, channel_);
         config.clk_div = 8;     // 10Mhz設定
+        config.mem_block_num = 2;
         ESP_ERROR_CHECK(rmt_config(&config));
         ESP_ERROR_CHECK(rmt_driver_install(channel_, 0, 0));
 
