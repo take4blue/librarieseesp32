@@ -1,16 +1,23 @@
 {
     "name": "Color LED Control(pl9823)",
     "description" : "Color LED Control for pl9823.",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "platforms": ["espressif32"],
     "frameworks": ["espidf"],
     "license" : "MIT",
     "examples": [
         {
-            "name": "sample1",
+            "name": "Color2LedControl sample",
             "base": "examples/sample1",
             "files": [
                 "main.cpp"
+            ]
+        },
+        {
+            "name": "ColorLedControl sample",
+            "base": "examples/sample2",
+            "files": [
+                "ColorLedControlMain.cpp"
             ]
         }
     ],
