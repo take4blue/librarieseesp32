@@ -1,16 +1,16 @@
-#include "ColorLed.h"
+#include "Color2LedControl.h"
 #include <driver/gpio.h>
 #include <esp32/rom/ets_sys.h>
 #include <algorithm>
 
 namespace Take4
 {
-    ColorLed::ColorLed()
+    Color2LedControl::Color2LedControl()
         : channel_(RMT_CHANNEL_0)
     {
     }
 
-    ColorLed::~ColorLed()
+    Color2LedControl::~Color2LedControl()
     {
     }
     // CLK分割数は10Mhzにするので100ns単位でrmt_item32_tの設定をする
@@ -31,7 +31,7 @@ namespace Take4
     static const rmt_item32_t pl9823_3_bit0 = {{{4, 1, 8, 0}}};
     static const rmt_item32_t pl9823_3_bit1 = {{{8, 1, 4, 0}}};
 
-    void IRAM_ATTR ColorLed::u8toRmt(const void *src, rmt_item32_t *dest, size_t src_size,
+    void IRAM_ATTR Color2LedControl::u8toRmt(const void *src, rmt_item32_t *dest, size_t src_size,
                                      size_t wanted_num, size_t *translated_size, size_t *item_num)
     {
         // データチェック
@@ -61,7 +61,7 @@ namespace Take4
         *item_num = num;
     }
 
-    void ColorLed::begin(gpio_num_t pin, rmt_channel_t channel)
+    void Color2LedControl::begin(gpio_num_t pin, rmt_channel_t channel)
     {
         gpio_config_t gpio = {
             .pin_bit_mask = 1UL << pin,
@@ -79,14 +79,14 @@ namespace Take4
         channel_ = channel;
         rmt_config_t config = RMT_DEFAULT_CONFIG_TX(pin, channel_);
         config.clk_div = 8;     // 10Mhz設定
-        config.mem_block_num = 2;
+        config.mem_block_num = 1;
         ESP_ERROR_CHECK(rmt_config(&config));
         ESP_ERROR_CHECK(rmt_driver_install(channel_, 0, 0));
 
-        ESP_ERROR_CHECK(rmt_translator_init(channel_, ColorLed::u8toRmt));
+        ESP_ERROR_CHECK(rmt_translator_init(channel_, Color2LedControl::u8toRmt));
     }
 
-    void ColorLed::update(const RGBBuffer_t *rgb, size_t num)
+    void Color2LedControl::update(const RGBBuffer_t *rgb, size_t num)
     {
         if (rgb != nullptr && num > 0) {
             ESP_ERROR_CHECK(rmt_write_sample(channel_, rgb, num * BufferBlockSize, true));

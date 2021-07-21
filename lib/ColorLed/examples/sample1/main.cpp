@@ -1,4 +1,4 @@
-#include "ColorLed.h"
+#include "Color2LedControl.h"
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -6,13 +6,13 @@ const gpio_num_t pin = GPIO_NUM_32;
 const rmt_channel_t channel = RMT_CHANNEL_0;
 const size_t NumLed = 2;
 
-Take4::ColorLed led;
+Take4::Color2LedControl led;
 
 extern "C"
 void app_main()
 {
     Take4::RGBBuffer_t counter = 0xC8;
-    Take4::RGBBuffer_t rgb[NumLed * Take4::ColorLed::BufferBlockSize];
+    Take4::RGBBuffer_t rgb[NumLed * Take4::Color2LedControl::BufferBlockSize];
     led.begin(pin, channel);
 
     for (;;counter += 10) {
