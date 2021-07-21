@@ -2,6 +2,7 @@
 #include <driver/gpio.h>
 #include <esp32/rom/ets_sys.h>
 #include <algorithm>
+#include "RMTLEDPattern.h"
 
 namespace Take4
 {
@@ -13,23 +14,6 @@ namespace Take4
     Color2LedControl::~Color2LedControl()
     {
     }
-    // CLK分割数は10Mhzにするので100ns単位でrmt_item32_tの設定をする
-
-    // データシートから類推した値
-    static const rmt_item32_t ws2311bit0 = {{{5, 1, 20, 0}}};
-    static const rmt_item32_t ws2311bit1 = {{{12, 1, 13, 0}}};
-
-    // データシートから類推した値
-    static const rmt_item32_t pl9823_1_bit0 = {{{3, 1, 14, 0}}};
-    static const rmt_item32_t pl9823_1_bit1 = {{{14, 1, 3, 0}}};
-
-    // 以下の設定は http://www.riric.jp/electronics/AVR/tech/PL9823(WS2811).html を参照
-    static const rmt_item32_t pl9823_2_bit0 = {{{4, 1, 10, 0}}};
-    static const rmt_item32_t pl9823_2_bit1 = {{{9, 1, 5, 0}}};
-
-    // pl9823_1_bitで出力した時pl9823が出したタイミングで800kHzに近いタイミングに調整してみた。
-    static const rmt_item32_t pl9823_3_bit0 = {{{4, 1, 8, 0}}};
-    static const rmt_item32_t pl9823_3_bit1 = {{{8, 1, 4, 0}}};
 
     void IRAM_ATTR Color2LedControl::u8toRmt(const void *src, rmt_item32_t *dest, size_t src_size,
                                      size_t wanted_num, size_t *translated_size, size_t *item_num)
