@@ -6,6 +6,7 @@ namespace Take4
     typedef uint8_t RGBBuffer_t;
 
     // PL9823フルカラーLED制御用クラス
+    // タイミングの決定にAPB_CLKを使用している
     class ColorLed
     {
     private:
@@ -29,6 +30,7 @@ namespace Take4
         void begin(gpio_num_t pin, rmt_channel_t channel);
 
         // LEDの更新
+        // APB_CLKが80Mhz以外での使用はしないように
         // rgb : RGBの色を各色1バイト、合計3バイトで表現する。rgbのバイト数はnum*3必要
         // num : 変更したいLEDの数、1以上
         void update(const RGBBuffer_t *rgb, size_t num);
