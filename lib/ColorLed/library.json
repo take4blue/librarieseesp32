@@ -1,7 +1,7 @@
 {
     "name": "Color LED Control(pl9823)",
     "description" : "Color LED Control for pl9823.",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "platforms": ["espressif32"],
     "frameworks": ["espidf"],
     "license" : "MIT",

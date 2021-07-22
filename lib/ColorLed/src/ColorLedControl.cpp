@@ -7,16 +7,19 @@ namespace Take4
     : channel_(RMT_CHANNEL_0)
     , nLed_(nLed)
     , rgb_(nullptr)
-    , sendBuffer_(nullptr)
+    , reset_(0)
+    , counter_(0)
     {
-        onoff[0] = pl9823_3_bit0;
-        onoff[1] = pl9823_3_bit1;
+        onoff[0].level0 = onoff[1].level0 = 1;
+        onoff[0].level1 = onoff[1].level1 = 0;
+        sendBuffer_[0] = sendBuffer_[1] = nullptr;
     }
     
     ColorLedControl::~ColorLedControl()
     {
         free(rgb_);
-        free(sendBuffer_);
+        free(sendBuffer_[0]);
+        free(sendBuffer_[1]);
     }
 
     void ColorLedControl::begin(gpio_num_t pin, rmt_channel_t channel)
@@ -32,7 +35,10 @@ namespace Take4
         rgb_ = (RGBBuffer_t*)calloc(sizeof(RGBBuffer_t) * BufferBlockSize, nLed_);
         // 送信バッファはnLed+1個確保
         // 最後は50μ秒のリセット情報を設定する
-        sendBuffer_ = (rmt_item32_t*)calloc(sizeof(rmt_item32_t) * BufferBlockSize * 8, nLed_ + 1);
+        sendBuffer_[0] = (rmt_item32_t*)calloc(sizeof(rmt_item32_t) * BufferBlockSize * 8, nLed_ + 1);
+        sendBuffer_[1] = (rmt_item32_t*)calloc(sizeof(rmt_item32_t) * BufferBlockSize * 8, nLed_ + 1);
+
+        setTransmissionTime(4, 8, 8, 4, 500);
     }
 
     void ColorLedControl::set(size_t no, RGBBuffer_t r, RGBBuffer_t g, RGBBuffer_t b)
@@ -46,18 +52,23 @@ namespace Take4
 
     void ColorLedControl::update()
     {
-        if (rgb_ && sendBuffer_) {
+        ++counter_;
+        if (rgb_ && sendBuffer_[counter_ % 2]) {
             size_t sPos = 0;
             for (size_t i = 0; i < nLed_ * BufferBlockSize; ++i) {
                 for (size_t j = 0; j < 8; ++j) {
-                    sendBuffer_[sPos] = onoff[((rgb_[i] >> (8 - j)) & 0x1 ? 1 : 0)];
+                    sendBuffer_[counter_ % 2][sPos] = onoff[((rgb_[i] >> (8 - j)) & 0x1 ? 1 : 0)];
                     ++sPos;
                 }
             }
-            sendBuffer_[sPos].duration0 = sendBuffer_[sPos].duration1 = 50;
-            sendBuffer_[sPos].level0 = sendBuffer_[sPos].level1 = 0;
-            ++sPos;
-            rmt_write_items(channel_, sendBuffer_, sPos, false);
+            if (reset_ > 0) {
+                sendBuffer_[counter_ % 2][sPos].duration0 = reset_;
+                sendBuffer_[counter_ % 2][sPos].duration1 = 0;
+                sendBuffer_[counter_ % 2][sPos].level0 = sendBuffer_[counter_ % 2][sPos].level1 = 0;
+                ++sPos;
+            }
+            wait(false);
+            rmt_write_items(channel_, sendBuffer_[counter_ % 2], sPos, false);
         }
     }
 
@@ -78,6 +89,20 @@ namespace Take4
         else {
             return false;
         }
+    }
+
+    void ColorLedControl::setTransmissionTime(uint16_t t0h, uint16_t t0l, uint16_t t1h, uint16_t t1l, uint16_t reset)
+    {
+        onoff[0].duration0 = t0h;
+        onoff[0].duration1 = t0l;
+        onoff[1].duration0 = t1h;
+        onoff[1].duration1 = t1l;
+        reset_ = reset;
+    }
+
+    void ColorLedControl::setTransmissionTime(uint16_t reset)
+    {
+        reset_ = reset;
     }
 
 } // namespace Take4

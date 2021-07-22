@@ -1,5 +1,8 @@
 #include "ColorLedControl.h"
 
+// setTransmissionTimeで各種時間の調整をすることが可能。
+// こちらで調べたところ、nLed=20の場合リセット時間を83にすることで50μ秒のリセット時間になった
+
 const gpio_num_t pin = GPIO_NUM_32;
 const rmt_channel_t channel = RMT_CHANNEL_0;
 const size_t NumLed = 3;
