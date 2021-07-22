@@ -24,12 +24,14 @@ enum IRFormatType {
     SONYFormatRepeat = 7, // SONYのリピート情報
 };
 
+// NEC形式データフォーマット
 struct NECData {
     IRFormatType formatType;
     uint16_t customerCode;
     uint8_t data;
 };
 
+// 家電製品協会のデータフォーマット
 struct AEHAData {
     IRFormatType formatType;
     uint16_t customerCode;
@@ -38,6 +40,7 @@ struct AEHAData {
     uint8_t data[MAX_AEHADATA];
 };
 
+// SONY形式データフォーマット
 struct SONYData {
     IRFormatType formatType;
     uint8_t data;
@@ -45,6 +48,7 @@ struct SONYData {
 	uint8_t nAddress;
 };
 
+// データフォーマットのUNION形式のデータ
 union IRData {
     IRFormatType formatType;
     NECData nec;

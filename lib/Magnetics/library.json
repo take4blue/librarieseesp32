@@ -1,7 +1,7 @@
 {
     "name": "Magnetic",
-    "description" : "Magnetic sensor",
-    "version": "1.0.0",
+    "description" : "Magnetic sensor. drv5053などの磁気センサーのデータを取り扱うためのライブラリ",
+    "version": "1.0.1",
     "platforms": ["espressif32", "atmelavr", "raspberrypi"],
     "frameworks": ["espidf", "arduino"],
     "license" : "MIT",

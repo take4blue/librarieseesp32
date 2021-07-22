@@ -3,6 +3,7 @@
 
 namespace Take4
 {
+    // ターミナル（もしくはシリアル）からの入力データを文字列化するためのクラス
     class Readline {
     private:
         static const size_t BufSize = 1024;

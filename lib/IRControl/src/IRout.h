@@ -6,6 +6,7 @@ namespace Take4
 // 赤外線リモコンデータ出力
 // delayのためESP_PLATFORMの場合1tick1msが望ましい。
 // ARDUINO_ARCH_AVR, ESP_PLATFORM
+// 送信データは IRCommon.h ないで定義されているNEC/AEHA/SONYの各フォーマットを使用すること
 class IRout
 {
 private:
@@ -27,6 +28,8 @@ public:
 	IRout();
 
 	// 初期化処置
+	// pin : ioポート番号
+	// channel : RMTのチャンネル番号
 	void begin(PortNo_t pin
 #if defined(ESP_PLATFORM)
         , uint8_t channel
@@ -34,15 +37,19 @@ public:
 	);
 
 	// データの送信
+	// data : 送信データ
 	void send(const NECData& data);
 
 	// データの送信
+	// data : 送信データ
 	void send(const SONYData& data);
 
 	// データの送信
+	// data : 送信データ
 	void send(const AEHAData& data);
 
 	// データの送信
+	// data : 送信データ
 	void send(const IRData& data);
 };
 }

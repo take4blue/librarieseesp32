@@ -11,7 +11,7 @@ typedef uint8_t Port_t;
 
 namespace Take4 {
 // 1磁気センサーについての情報管理
-// sum_, prevValue_, value_でノイズフィルター的な役割を与えている
+// ノイズ除去のため、移動平均フィルタを使用している
 class Magnetic {
 private:
     static const uint8_t maxOriginRetry_ = 20;
