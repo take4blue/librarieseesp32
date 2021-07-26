@@ -1,0 +1,29 @@
+{
+    "name": "atm0130",
+    "description" : "秋月のATM0130操作クラスをESP向けに改修したもの。別リポジトリの物をこちらに移動。",
+    "version": "1.0.0",
+    "platforms": ["espressif32"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "sample1",
+            "base": "examples/sample1",
+            "files": [
+                "main.cpp"
+            ]
+        }
+    ],
+    "dependencies":
+    [
+        {
+            "name": "freertos_utility",
+            "version": "*",
+            "platforms": ["espressif32"]
+        }
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
+}
