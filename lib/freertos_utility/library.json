@@ -1,9 +1,18 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "platforms": ["espressif32"],
     "license" : "MIT",
+    "examples": [
+        {
+            "name": "TaskControl sample",
+            "base": "examples/sample1",
+            "files": [
+                "main.cpp"
+            ]
+        }
+    ],
     "authors":
         {
             "name": "take4",
