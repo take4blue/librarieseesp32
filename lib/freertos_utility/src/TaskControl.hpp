@@ -7,7 +7,7 @@ namespace Take4
     // FreeRTOSのTask関連のラッパークラス
     // Tクラスにはpublicでvoid task()というメソッドを用意しておくこと
     // 用意していないとコンパイルは通るがリンクでエラーになる
-    // クラス継承させる場合TaskControlVを使う
+    // 仮想関数を使う場合はTaskControlVを使う
     // 参照 : https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/freertos.html#task-api
     template <class T>
     class TaskControl {
