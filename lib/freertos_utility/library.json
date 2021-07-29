@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -11,7 +11,15 @@
             "files": [
                 "main.cpp"
             ]
+        },
+        {
+            "name": "TaskControlV, notify sample",
+            "base": "examples/sample2",
+            "files": [
+                "TaskControlV.cpp"
+            ]
         }
+
     ],
     "authors":
         {
