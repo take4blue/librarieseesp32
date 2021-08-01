@@ -1,0 +1,21 @@
+{
+    "name": "Strobe control",
+    "description" : "外部ストロボを制御するためのLED/IR LEDの制御クラス。Sea&Sea/INON/キヤノンの外部フラッシュを対象としている",
+    "version": "0.1.0",
+    "platforms": ["espressif32"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "sample1",
+            "base": "examples/sample1",
+            "files": [
+                "main.cpp"
+            ]
+        }
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
+}
