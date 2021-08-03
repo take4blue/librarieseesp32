@@ -1,7 +1,7 @@
 {
     "name": "atm0130",
     "description" : "秋月のATM0130操作クラスをESP向けに改修したもの。別リポジトリの物をこちらに移動。",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [

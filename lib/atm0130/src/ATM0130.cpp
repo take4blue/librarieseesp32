@@ -1,9 +1,10 @@
 #include <memory.h>
 #include <algorithm>
 #include "ATM0130.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "AutoLocker.hpp"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#include <AutoLocker.hpp>
+#include <IOAccess.hpp>
 
 using namespace Take4;
 
@@ -38,7 +39,12 @@ ATM0130::ATM0130()
 static void transfer_callback(spi_transaction_t *t)
 {
     if (t->user != nullptr) {
-      gpio_set_level((gpio_num_t)((uint32_t)t->user & 0xFF), ((uint32_t)t->user & 0xFF00) != 0 ? 1 : 0);
+      if (((uint32_t)t->user & 0xFF00) != 0) {
+        gpioSet((gpio_num_t)((uint32_t)t->user & 0xFF));
+      }
+      else {
+        gpioClear((gpio_num_t)((uint32_t)t->user & 0xFF));
+      }
     }
 }
 
@@ -338,11 +344,11 @@ void ATM0130::print(const std::string& str)
 
 void ATM0130::resetLCD(void)
 {
-  gpio_set_level(resetPin_, 1);
+  gpioSet(resetPin_);
   vTaskDelay(20/portTICK_PERIOD_MS);
-  gpio_set_level(resetPin_, 0);
+  gpioClear(resetPin_);
   vTaskDelay(20/portTICK_PERIOD_MS);
-  gpio_set_level(resetPin_, 1);
+  gpioSet(resetPin_);
   vTaskDelay(20/portTICK_PERIOD_MS);
 }
 
