@@ -28,7 +28,7 @@ namespace Take4
         if (x < GPIO_NUM_32)
             return GPIO.in & (1 << x);
         else
-            return GPIO.in1.val & (1 << x);
+            return GPIO.in1.val & (1 << (x - GPIO_NUM_32));
     }
 
 } // namespace Take4
