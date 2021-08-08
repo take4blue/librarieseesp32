@@ -3,7 +3,7 @@
 #include "ATM0130.h"
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-#include <AutoLocker.hpp>
+#include <LockGuard.hpp>
 #include <IOAccess.hpp>
 
 using namespace Take4;
@@ -188,11 +188,11 @@ void ATM0130::begin(gpio_num_t dcPin, gpio_num_t resetPin, int mosi, int miso, i
   }
 
   {
-    AutoLocker<ATM0130> lock(*this, 100);
+    LockGuard<ATM0130> lock(*this, 100);
     writeReg(0x11);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0x36);  //MADCTL
     writeData(0x00);
     //MY=0
@@ -210,50 +210,50 @@ void ATM0130::begin(gpio_num_t dcPin, gpio_num_t resetPin, int mosi, int miso, i
     writeData(0x33);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xb7);
     writeData(0x75);
   }
   ////---------------------------------ST7789V Power
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xc2);
     writeData(0x01);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xc3);
     writeData(0x10);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xc4);
     writeData(0x20);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xc6);
     writeData(0x0f);
     writeReg(0xb0);
     writeData(2, 0x00, 0xf0, 0, 0);//RRRR RGGGG GGGB BBBB
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xD0);
     writeData(2, 0xA4, 0xA1, 0, 0);
   }
   ////--------------------------------ST7789V gamma
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0x21);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xbb);
     writeData(0x3b);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xE0);    //Set Gamma
     writeData(4, 0xF0, 0x0b, 0x11, 0x0e);
     writeData(4, 0x0d, 0x19, 0x36, 0x33);
@@ -261,7 +261,7 @@ void ATM0130::begin(gpio_num_t dcPin, gpio_num_t resetPin, int mosi, int miso, i
     writeData(2, 0x2c, 0x2e, 0, 0);
   }
   {
-    AutoLocker<ATM0130> lock(*this, 2);
+    LockGuard<ATM0130> lock(*this, 2);
     writeReg(0xE1);    //Set Gamma
     writeData(4, 0xF0, 0x0d, 0x12, 0x0b);
     writeData(4, 0x09, 0x03, 0x32, 0x44);
@@ -274,7 +274,7 @@ void ATM0130::begin(gpio_num_t dcPin, gpio_num_t resetPin, int mosi, int miso, i
     writeReg(0x29);    //Display on
   }
   {
-    AutoLocker<ATM0130> lock(*this);
+    LockGuard<ATM0130> lock(*this);
     writeReg(0x2c);
   }
 }
@@ -387,7 +387,7 @@ void ATM0130::endWindow()
 void ATM0130::drawRectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
   int loop = width * height;
-  AutoLocker<ATM0130> lock(*this);
+  LockGuard<ATM0130> lock(*this);
   setWindow(x, y, width, height);
   for (int i = 0; i < loop; i++) {
     putPixel(figColor_);
@@ -412,7 +412,7 @@ void ATM0130::setCharQueue(uint8_t c)
 
 void ATM0130::writeCharQueue()
 {
-  AutoLocker<ATM0130> lock(*this);
+  LockGuard<ATM0130> lock(*this);
   int counter = 0;
   setWindow(charX_, charY_, 6, 8);
   for (uint8_t i = 0; i < 5; i++) {

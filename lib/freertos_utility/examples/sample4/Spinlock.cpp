@@ -1,8 +1,8 @@
-#include <AutoLocker.hpp>
 #include <IOAccess.hpp>
 #include <Spinlock.hpp>
 #include <TaskControl.hpp>
 #include <esp32/rom/ets_sys.h>
+#include <mutex>
 
 class Test1 : public Take4::TaskControlV<Test1> {
   protected:
@@ -64,7 +64,7 @@ class Test2 : public Test1 {
     virtual void task()
     {
         // タスク全体をクリティカルセクションにしている
-        Take4::AutoLocker<Take4::Spinlock> a(lock_, 0);
+        std::lock_guard<Take4::Spinlock> a(lock_);
         for (;; ++counter_) {
             pin();
         }

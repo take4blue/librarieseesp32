@@ -89,6 +89,17 @@ namespace Take4
     // ATM0130へのデータ転送終了
     void end();
 
+    // LockGuardに引数を合わせる
+    void lock()
+    {
+      start();
+    }
+
+    void unlock()
+    {
+      end();
+    }
+
   private:
     // コマンド書き込み
     // data : コマンド番号

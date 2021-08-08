@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
