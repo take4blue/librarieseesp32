@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -24,6 +24,13 @@
             "base": "examples/sample3",
             "files": [
                 "IOAccess.cpp"
+            ]
+        },
+        {
+            "name": "Spinlockサンプル",
+            "base": "examples/sample4",
+            "files": [
+                "Spinlock.cpp"
             ]
         }
     ],
