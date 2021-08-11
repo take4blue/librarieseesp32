@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.7",
+    "version": "0.0.8",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -31,6 +31,13 @@
             "base": "examples/sample4",
             "files": [
                 "Spinlock.cpp"
+            ]
+        },
+        {
+            "name": "タイマー割り込みラッパークラスサンプル",
+            "base": "examples/sample5",
+            "files": [
+                "Timer.cpp"
             ]
         }
     ],
