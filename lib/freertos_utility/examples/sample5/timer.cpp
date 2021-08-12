@@ -1,8 +1,8 @@
 #include <IOAccess.hpp>
-#include <Timer.hpp>
+#include <TimerT.hpp>
 
 // 3ms単位にGPIOのH/Lを繰り返すだけのクラス
-class Test1 : public Take4::Timer<Test1> {
+class Test1 : public Take4::TimerT<Test1> {
   private:
     volatile int counter_;
     gpio_num_t pin_;
@@ -35,7 +35,7 @@ class Test1 : public Take4::Timer<Test1> {
         };
 
         // タイマーの初期化(IRAM形式)
-        Take4::Timer<Test1>::begin(config, Test1::timerIntr);
+        Take4::TimerT<Test1>::begin(config, Test1::timerIntr);
         auto val = microTime(3000, config.divider);
         setAlarmValue(val);
         setCounterValue(0ULL);

@@ -23,7 +23,7 @@ namespace Take4 {
 // T : 組み込みクラス
 // void interrupt()が呼び出される割り込みルーチン
 template <class T>
-class Timer {
+class TimerT {
   private:
     volatile timer_group_t timerGroup_;
     volatile timer_idx_t timerEventIndex_;
@@ -49,12 +49,12 @@ class Timer {
     // それ以外はfalseリターンで良いようだ
     typedef bool (*InterruptFunction)(void *);
 
-    Timer()
+    TimerT()
         : timerGroup_(TIMER_GROUP_0)
         , timerEventIndex_(TIMER_0)
     {
     }
-    ~Timer() {}
+    ~TimerT() {}
 
     // 割り込み設定(直接呼出しの割り込みは非IRAM形式)
     // config : 割り込みの初期化内容(以下は例)
@@ -76,7 +76,7 @@ class Timer {
         // タイマー割り込みの初期化
         ESP_ERROR_CHECK(timer_init(timerGroup_, timerEventIndex_, &config));
         ESP_ERROR_CHECK(timer_isr_callback_add(timerGroup_, timerEventIndex_,
-                                               Timer::timerIntr, (void *)this, 0));
+                                               TimerT::timerIntr, (void *)this, 0));
         // ESP_LOGV(TAG_, "begin\n");
     }
 
