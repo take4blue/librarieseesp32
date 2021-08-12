@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -34,8 +34,15 @@
             ]
         },
         {
-            "name": "タイマー割り込みラッパークラスサンプル",
+            "name": "テンプレート型タイマー割り込みラッパークラスサンプル",
             "base": "examples/sample5",
+            "files": [
+                "Timer.cpp"
+            ]
+        },
+        {
+            "name": "通常クラス型タイマー割り込みラッパークラスサンプル",
+            "base": "examples/sample6",
             "files": [
                 "Timer.cpp"
             ]
