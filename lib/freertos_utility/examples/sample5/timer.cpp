@@ -3,9 +3,12 @@
 
 // 3ms単位にGPIOのH/Lを繰り返すだけのクラス
 class Test1 : public Take4::Timer<Test1> {
-  protected:
+  private:
     volatile int counter_;
     gpio_num_t pin_;
+
+    // 独自割り込み関数(マクロを使用している)
+    TimerIntrDefine();
 
   public:
     Test1()
@@ -31,15 +34,15 @@ class Test1 : public Take4::Timer<Test1> {
             .divider = 80,
         };
 
-        // タイマーの初期化
-        Take4::Timer<Test1>::begin(config);
+        // タイマーの初期化(IRAM形式)
+        Take4::Timer<Test1>::begin(config, Test1::timerIntr);
         auto val = microTime(3000, config.divider);
         setAlarmValue(val);
         setCounterValue(0ULL);
         start();
     }
 
-    void interrupt()
+    void IRAM_ATTR interrupt()
     {
         ++counter_;
         // delay単位にピンのH/Lを繰り返す
@@ -51,6 +54,9 @@ class Test1 : public Take4::Timer<Test1> {
         }
     }
 };
+
+// 割り込み関数の実装(マクロを利用)
+TimerIntrImpl(Test1);
 
 Test1 test1;
 

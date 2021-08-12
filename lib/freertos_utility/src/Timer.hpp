@@ -1,9 +1,24 @@
 #pragma once
 #include <driver/timer.h>
-#include <hal/timer_types.h>
 #include <esp_log.h>
+#include <functional>
+#include <hal/timer_types.h>
 
 namespace Take4 {
+// タイマー割り込みのクラス側の実装例
+#define TimerIntrImpl(className)                 \
+    IRAM_ATTR bool className::timerIntr(void *p) \
+    {                                            \
+        className *user = (className *)p;        \
+        user->interrupt();                       \
+        user->clrIntrStatusISR();                \
+        user->enableAlarmISR();                  \
+        return false;                            \
+    }
+// TimerIntrImplに合わせたクラス内での定義例
+#define TimerIntrDefine() \
+    static bool timerIntr(void *p)
+
 // タイマー割り込みのラッパークラス
 // T : 組み込みクラス
 // void interrupt()が呼び出される割り込みルーチン
@@ -15,20 +30,25 @@ class Timer {
 
     // 割り込み関数
     // 中身でT::taskをすぐに呼び出すようにしている
-    static void timerIntr(void *p)
+    static bool timerIntr(void *p)
     {
         T *user = (T *)p;
-        timer_spinlock_take(user->timerGroup_);
         user->T::interrupt();
-        timer_group_clr_intr_status_in_isr(user->timerGroup_, user->timerEventIndex_);
-        timer_group_enable_alarm_in_isr(user->timerGroup_, user->timerEventIndex_);
-        timer_spinlock_give(user->timerGroup_);
+        user->clrIntrStatusISR();
+        user->enableAlarmISR();
+        return false;
     }
 
     // ダミー
     void interrupt();
 
   public:
+    // コールバック呼び出し関数
+    // 詳細はESP-IDFのtimer_isr_tのAPIを参照
+    // コールバック内でxQueueSendFromISRを使う場合pxHigherPriorityTaskWokenの返り値をreturnの判断材料にする
+    // それ以外はfalseリターンで良いようだ
+    typedef bool (*InterruptFunction)(void *);
+
     Timer()
         : timerGroup_(TIMER_GROUP_0)
         , timerEventIndex_(TIMER_0)
@@ -36,7 +56,7 @@ class Timer {
     }
     ~Timer() {}
 
-    // ハードウェア設定
+    // 割り込み設定(直接呼出しの割り込みは非IRAM形式)
     // config : 割り込みの初期化内容(以下は例)
     // timer_config_t config = {
     //     .alarm_en = TIMER_ALARM_EN,
@@ -47,6 +67,7 @@ class Timer {
     //     .divider = 16,
     // }; // default clock source is APB
     // timerGroup : タイマーグループ
+    // timerEventIndex : タイマーインデックス
     void begin(const timer_config_t &config, timer_group_t timerGroup = TIMER_GROUP_0, timer_idx_t timerEventIndex = TIMER_0)
     {
         timerGroup_ = timerGroup;
@@ -54,8 +75,34 @@ class Timer {
 
         // タイマー割り込みの初期化
         ESP_ERROR_CHECK(timer_init(timerGroup_, timerEventIndex_, &config));
-        ESP_ERROR_CHECK(timer_isr_register(timerGroup_, timerEventIndex_,
-                           Timer::timerIntr, (void *)this, 0, nullptr));
+        ESP_ERROR_CHECK(timer_isr_callback_add(timerGroup_, timerEventIndex_,
+                                               Timer::timerIntr, (void *)this, 0));
+        // ESP_LOGV(TAG_, "begin\n");
+    }
+
+    // 割り込み設定(IRAM形式)
+    // 呼び出し関数はクラス定義側で用意する:TimerIntrImplマクロが例
+    // config : 割り込みの初期化内容(以下は例)
+    // timer_config_t config = {
+    //     .alarm_en = TIMER_ALARM_EN,
+    //     .counter_en = TIMER_PAUSE,
+    //     .intr_type = TIMER_INTR_LEVEL,
+    //     .counter_dir = TIMER_COUNT_DOWN,
+    //     .auto_reload = TIMER_AUTORELOAD_DIS,
+    //     .divider = 16,
+    // }; // default clock source is APB
+    // func : コールバックで呼び出す関数でIRAMに配置されている必要がある。TimerIntrImplを使う場合はクラス名::timerIntrにする
+    // timerGroup : タイマーグループ
+    // timerEventIndex : タイマーインデックス
+    void begin(const timer_config_t &config, InterruptFunction func, timer_group_t timerGroup = TIMER_GROUP_0, timer_idx_t timerEventIndex = TIMER_0)
+    {
+        timerGroup_ = timerGroup;
+        timerEventIndex_ = timerEventIndex;
+
+        // タイマー割り込みの初期化
+        ESP_ERROR_CHECK(timer_init(timerGroup_, timerEventIndex_, &config));
+        ESP_ERROR_CHECK(timer_isr_callback_add(timerGroup_, timerEventIndex_,
+                                               func, (void *)this, ESP_INTR_FLAG_IRAM));
         // ESP_LOGV(TAG_, "begin\n");
     }
 
@@ -158,6 +205,18 @@ class Timer {
     {
         // ESP_LOGV(TAG_, "disable\n");
         ESP_ERROR_CHECK(timer_disable_intr(timerGroup_, timerEventIndex_));
+    }
+
+    // 割り込みルーチン内での割り込み情報のクリア
+    void clrIntrStatusISR()
+    {
+        timer_group_clr_intr_status_in_isr(timerGroup_, timerEventIndex_);
+    }
+
+    // 割り込みルーチン内での割り込み有効
+    void enableAlarmISR()
+    {
+        timer_group_enable_alarm_in_isr(timerGroup_, timerEventIndex_);
     }
 };
 } // namespace Take4
