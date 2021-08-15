@@ -7,42 +7,42 @@
     "examples": [
         {
             "name": "TaskControl sample",
-            "base": "examples/sample1",
+            "base": "examples/taskcontrol1",
             "files": [
                 "main.cpp"
             ]
         },
         {
             "name": "TaskControlV, notify sample",
-            "base": "examples/sample2",
+            "base": "examples/taskcontrol2",
             "files": [
                 "TaskControlV.cpp"
             ]
         },
         {
             "name": "IOAccessサンプル",
-            "base": "examples/sample3",
+            "base": "examples/ioaccess",
             "files": [
                 "IOAccess.cpp"
             ]
         },
         {
             "name": "Spinlockサンプル",
-            "base": "examples/sample4",
+            "base": "examples/spinlock",
             "files": [
                 "Spinlock.cpp"
             ]
         },
         {
             "name": "テンプレート型タイマー割り込みラッパークラスサンプル",
-            "base": "examples/sample5",
+            "base": "examples/timer1",
             "files": [
                 "Timer.cpp"
             ]
         },
         {
             "name": "通常クラス型タイマー割り込みラッパークラスサンプル",
-            "base": "examples/sample6",
+            "base": "examples/timer2",
             "files": [
                 "Timer.cpp"
             ]
