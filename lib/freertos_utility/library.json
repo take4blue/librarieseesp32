@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -50,6 +50,13 @@
         {
             "name": "ウォッチドッグタイマーをタスクに組み込んだサンプル",
             "base": "examples/taskandwdt1",
+            "files": [
+                "taskandwdt.cpp"
+            ]
+        },
+        {
+            "name": "単純なタスククラスとウォッチドッグタイマーのサンプル",
+            "base": "examples/taskandwdt2",
             "files": [
                 "taskandwdt.cpp"
             ]
