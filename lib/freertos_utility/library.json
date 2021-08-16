@@ -1,7 +1,7 @@
 {
     "name": "freeRTOS Utility",
     "description" : "FreeRTOS用のユーティリティ群",
-    "version": "0.0.13",
+    "version": "0.0.14",
     "platforms": ["espressif32"],
     "license" : "MIT",
     "examples": [
@@ -59,6 +59,13 @@
             "base": "examples/taskandwdt2",
             "files": [
                 "taskandwdt.cpp"
+            ]
+        },
+        {
+            "name": "ESP_TIMER(タイマーループと呼称)のサンプル",
+            "base": "examples/timerloop",
+            "files": [
+                "timerloop.cpp"
             ]
         }
     ],
