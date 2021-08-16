@@ -51,6 +51,7 @@ class TimerLoop {
     // タイマーループの終了
     void end()
     {
+        stop();
         esp_timer_delete(handle_);
         handle_ = nullptr;
     }
