@@ -18,7 +18,7 @@
         {
             "name": "ustd",
             "version": "*",
-            "platforms": ["espressif32"]
+            "platforms": ["atmelavr"]
         }    
     ],
     "authors":
