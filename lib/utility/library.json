@@ -1,0 +1,29 @@
+{
+    "name": "Utility",
+    "description" : "ユーティリティ群",
+    "version": "0.0.1",
+    "platforms": ["espressif32", "arduino"],
+    "license" : "MIT",
+    "examples": [
+        {
+            "name": "FunctionAndSleep Sample",
+            "base": "examples/FandSleep",
+            "files": [
+                "esp32Version.cpp",
+                "unoVersion.cpp"
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "name": "ustd",
+            "version": "*",
+            "platforms": ["espressif32"]
+        }    
+    ],
+    "authors":
+        {
+            "name": "take4",
+            "url": "https://take4-blue.com/contact/"
+        }
+}
